@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinners {
+  -moz-appearance: textfield;
+}
+
+@import 'bootstrap/dist/css/bootstrap.min.css';

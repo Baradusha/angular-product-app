@@ -1,0 +1,82 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Список товаров</h2>
+        @if (!(loading$ | async)) {
+        <button class="btn btn-primary" (click)="createProduct()" [disabled]="loading$ | async">
+          <i class="fas fa-plus"></i> Добавить товар
+        </button>
+        }
+      </div>
+
+      @if (loading$ | async) {
+      <div class="text-center my-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Загрузка...</span>
+        </div>
+      </div>
+      } @if (error$ | async; as error) {
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+      } @if (!(loading$ | async) && (products$ | async)?.length) {
+      <div class="row">
+        @for (product of products$ | async; track product.id) {
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="card-content">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text description-text" [title]="product.description">
+                  {{ product.description }}
+                </p>
+                <div class="badges-container mb-2">
+                  <span class="badge badge-primary">{{ product.category }}</span>
+                  <span class="badge badge-info">В наличии: {{ product.stock }}</span>
+                </div>
+                <h6 class="card-subtitle mb-3 text-success">
+                  {{ product.price | currency : 'USD' : 'symbol' : '1.0' }}
+                </h6>
+              </div>
+              <div class="btn-group w-100">
+                <button class="btn btn-outline-primary btn-sm" (click)="editProduct(product)">
+                  <i class="fas fa-edit"></i> Редактировать
+                </button>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteProduct(product.id!)">
+                  <i class="fas fa-trash"></i> Удалить
+                </button>
+              </div>
+            </div>
+            <div class="card-footer text-muted">
+              <small>
+                Создан: {{ product.createdAt | date : 'dd.MM.yyyy' }}
+                @if (product.updatedAt !== product.createdAt) {
+                <span> | Обновлен: {{ product.updatedAt | date : 'dd.MM.yyyy' }} </span>
+                }
+              </small>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      } @if (!(loading$ | async) && !(products$ | async)?.length) {
+      <div class="text-center my-4">
+        <div class="alert alert-info" role="alert">
+          <h4 class="alert-heading">Товары не найдены</h4>
+          <p>Добавьте первый товар, чтобы начать работу с приложением.</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+
+<app-product-edit-modal
+  [product]="editingProduct"
+  [isOpen]="showModal"
+  (closeModal)="closeModal()"
+  (productCreated)="onProductCreated($event)"
+  (productUpdated)="onProductUpdated($event)"
+>
+</app-product-edit-modal>
