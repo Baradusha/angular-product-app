@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, mergeMap, catchError, switchMap } from 'rxjs/operators';
 import { ProductService } from '../../services/product.service';
-import * as ProductActions from '../actions/product.actions';
+import { productActions } from '../actions/product.actions';
 
 @Injectable()
 export class ProductEffects {
@@ -12,11 +12,11 @@ export class ProductEffects {
 
   loadProducts$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ProductActions.loadProducts),
+      ofType(productActions.loadProducts),
       mergeMap(() =>
         this.productService.getProducts().pipe(
-          map((products) => ProductActions.loadProductsSuccess({ products })),
-          catchError((error) => of(ProductActions.loadProductsFailure({ error: error.message })))
+          map((products) => productActions.loadProductsSuccess({ products })),
+          catchError((error) => of(productActions.loadProductsFailure({ error: error.message })))
         )
       )
     )
@@ -24,11 +24,11 @@ export class ProductEffects {
 
   createProduct$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ProductActions.createProduct),
+      ofType(productActions.createProduct),
       mergeMap(({ product }) =>
         this.productService.createProduct(product).pipe(
-          map((createdProduct) => ProductActions.createProductSuccess({ product: createdProduct })),
-          catchError((error) => of(ProductActions.createProductFailure({ error: error.message })))
+          map((createdProduct) => productActions.createProductSuccess({ product: createdProduct })),
+          catchError((error) => of(productActions.createProductFailure({ error: error.message })))
         )
       )
     )
@@ -36,11 +36,11 @@ export class ProductEffects {
 
   updateProduct$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ProductActions.updateProduct),
-      switchMap(({ id, product }) =>
-        this.productService.updateProduct(id, product).pipe(
-          map((updatedProduct) => ProductActions.updateProductSuccess({ product: updatedProduct })),
-          catchError((error) => of(ProductActions.updateProductFailure({ error: error.message })))
+      ofType(productActions.updateProduct),
+      switchMap(({ id, changes }) =>
+        this.productService.updateProduct(id, changes).pipe(
+          map((updatedProduct) => productActions.updateProductSuccess({ product: updatedProduct })),
+          catchError((error) => of(productActions.updateProductFailure({ error: error.message })))
         )
       )
     )
@@ -48,11 +48,11 @@ export class ProductEffects {
 
   deleteProduct$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ProductActions.deleteProduct),
+      ofType(productActions.deleteProduct),
       mergeMap(({ id }) =>
         this.productService.deleteProduct(id).pipe(
-          map(() => ProductActions.deleteProductSuccess({ id })),
-          catchError((error) => of(ProductActions.deleteProductFailure({ error: error.message })))
+          map(() => productActions.deleteProductSuccess({ id })),
+          catchError((error) => of(productActions.deleteProductFailure({ error: error.message })))
         )
       )
     )

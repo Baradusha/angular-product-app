@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import * as ProductActions from '../../store/actions/product.actions';
+import { productActions } from '../../store/actions/product.actions';
 import * as ProductSelectors from '../../store/selectors/product.selectors';
 import { Product } from '../../models/product.model';
 import { ProductEditModal } from '../product-edit-modal/product-edit-modal';
@@ -29,7 +29,7 @@ export class ProductListComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.store.dispatch(ProductActions.loadProducts());
+    this.store.dispatch(productActions.loadProducts());
   }
 
   createProduct(): void {
@@ -44,20 +44,20 @@ export class ProductListComponent implements OnInit {
 
   deleteProduct(id: number): void {
     if (confirm('Вы уверены, что хотите удалить этот товар?')) {
-      this.store.dispatch(ProductActions.deleteProduct({ id }));
+      this.store.dispatch(productActions.deleteProduct({ id }));
     }
   }
 
   onProductCreated(createdProduct: Product): void {
-    this.store.dispatch(ProductActions.createProduct({ product: createdProduct }));
+    this.store.dispatch(productActions.createProduct({ product: createdProduct }));
     this.closeModal();
   }
 
   onProductUpdated(updatedProduct: Product): void {
     this.store.dispatch(
-      ProductActions.updateProduct({
+      productActions.updateProduct({
         id: updatedProduct.id!,
-        product: updatedProduct,
+        changes: updatedProduct,
       })
     );
     this.closeModal();

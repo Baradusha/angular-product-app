@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Product } from '../../models/product.model';
-import * as ProductActions from '../actions/product.actions';
+import { productActions } from '../actions/product.actions';
 
 export interface ProductState extends EntityState<Product> {
   selectedProductId: number | null;
@@ -23,13 +23,13 @@ export const initialState: ProductState = adapter.getInitialState({
 export const productReducer = createReducer(
   initialState,
 
-  on(ProductActions.loadProducts, (state) => ({
+  on(productActions.loadProducts, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
 
-  on(ProductActions.loadProductsSuccess, (state, { products }) =>
+  on(productActions.loadProductsSuccess, (state, { products }) =>
     adapter.setAll(products, {
       ...state,
       loading: false,
@@ -37,19 +37,19 @@ export const productReducer = createReducer(
     })
   ),
 
-  on(ProductActions.loadProductsFailure, (state, { error }) => ({
+  on(productActions.loadProductsFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
 
-  on(ProductActions.createProduct, (state) => ({
+  on(productActions.createProduct, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
 
-  on(ProductActions.createProductSuccess, (state, { product }) =>
+  on(productActions.createProductSuccess, (state, { product }) =>
     adapter.addOne(product, {
       ...state,
       loading: false,
@@ -57,19 +57,19 @@ export const productReducer = createReducer(
     })
   ),
 
-  on(ProductActions.createProductFailure, (state, { error }) => ({
+  on(productActions.createProductFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
 
-  on(ProductActions.updateProduct, (state) => ({
+  on(productActions.updateProduct, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
 
-  on(ProductActions.updateProductSuccess, (state, { product }) =>
+  on(productActions.updateProductSuccess, (state, { product }) =>
     adapter.updateOne(
       { id: product.id!, changes: product },
       {
@@ -80,19 +80,19 @@ export const productReducer = createReducer(
     )
   ),
 
-  on(ProductActions.updateProductFailure, (state, { error }) => ({
+  on(productActions.updateProductFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
 
-  on(ProductActions.deleteProduct, (state) => ({
+  on(productActions.deleteProduct, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
 
-  on(ProductActions.deleteProductSuccess, (state, { id }) =>
+  on(productActions.deleteProductSuccess, (state, { id }) =>
     adapter.removeOne(id, {
       ...state,
       loading: false,
@@ -101,18 +101,18 @@ export const productReducer = createReducer(
     })
   ),
 
-  on(ProductActions.deleteProductFailure, (state, { error }) => ({
+  on(productActions.deleteProductFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
 
-  on(ProductActions.selectProduct, (state, { id }) => ({
+  on(productActions.selectProduct, (state, { id }) => ({
     ...state,
     selectedProductId: id,
   })),
 
-  on(ProductActions.clearSelectedProduct, (state) => ({
+  on(productActions.clearSelectedProduct, (state) => ({
     ...state,
     selectedProductId: null,
   }))
