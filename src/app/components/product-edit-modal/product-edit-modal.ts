@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../models/product.model';
+
+import { Product, ProductFormData } from '../../models/product.model';
 import { ProductFormComponent } from '../product-form/product-form';
 
 @Component({
@@ -25,7 +26,7 @@ export class ProductEditModal {
     return this.isEditMode ? 'Редактировать продукт' : 'Создать новый продукт';
   }
 
-  onSave(productData: any): void {
+  onSave(productData: ProductFormData): void {
     if (this.isEditMode) {
       const updatedProduct = { ...this.product, ...productData };
       this.productUpdated.emit(updatedProduct);
@@ -36,6 +37,8 @@ export class ProductEditModal {
   }
 
   onCancel(): void {
-    this.closeModal.emit();
+    if (confirm(`Выйти из режима ${this.isEditMode ? 'редактирования' : 'создания'} товара?`)) {
+      this.closeModal.emit();
+    }
   }
 }
